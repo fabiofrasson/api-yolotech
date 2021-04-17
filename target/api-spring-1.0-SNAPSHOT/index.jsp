@@ -2,12 +2,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>API YoloTech</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
+<h1><%= "Sejam bem-vindos à API da YoloTech!" %>
 </h1>
 <br/>
-<a href="hello-servlet">Hello Servlet</a>
+<a href="http://localhost:8080/api-spring-1.0-SNAPSHOT/api/perfiladmin">Ir para a API</a>
 </body>
 </html>

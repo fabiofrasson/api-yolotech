@@ -1,6 +1,6 @@
 package br.com.yolotech.api_spring.dao;
 
-import br.com.yolotech.api_spring.entities.PerfilAdmin;
+import br.com.yolotech.api_spring.models.PerfilAdmin;
 import br.com.yolotech.api_spring.factory.ConnectionFactory;
 
 import java.sql.*;
@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class PerfilAdminDAO {
-    private Connection connection;
+    public Connection connection;
 
     public PerfilAdminDAO() {
         this.connection = new ConnectionFactory().getConnection();
@@ -34,7 +34,7 @@ public class PerfilAdminDAO {
     public void adicionaAdmin(PerfilAdmin perfilAdmin) {
         String sql = "INSERT INTO perfiladmin " +
                 "(nomeAdmin, sobrenomeAdmin, numCelularAdmin, " +
-                "dataCadastroAdmin, isContaAtivaAdmin) VALUES (?, ?, ?, ?, ?);";
+                "dataCadastroAdmin) VALUES (?, ?, ?, ?);";
 
         try {
             PreparedStatement statement = connection.prepareStatement(sql,
@@ -47,7 +47,6 @@ public class PerfilAdminDAO {
             statement.setString(2, perfilAdmin.getSobrenomeAdmin());
             statement.setString(3, perfilAdmin.getNumCelularAdmin());
             statement.setString(4, perfilAdmin.getDataCadastroAdmin());
-            statement.setBoolean(5, perfilAdmin.isContaAtivaAdmin());
 
             statement.execute();
 
@@ -61,6 +60,96 @@ public class PerfilAdminDAO {
             statement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public PerfilAdmin alteraPerfilAdmin(int id, PerfilAdmin perfilAdmin) {
+        if (id != 0 && perfilAdmin != null) {
+            String sql = "UPDATE perfiladmin SET nomeAdmin = ?, sobrenomeAdmin = ?, numCelularAdmin = ?, " +
+                    "dataCadastroAdmin = ?, isContaAtivaAdmin = ? WHERE idAdmin = ?;";
+
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+
+                statement.setString(1, perfilAdmin.getNomeAdmin());
+                statement.setString(2, perfilAdmin.getSobrenomeAdmin());
+                statement.setString(3, perfilAdmin.getNumCelularAdmin());
+                statement.setString(4, perfilAdmin.getDataCadastroAdmin());
+                statement.setBoolean(5, perfilAdmin.isContaAtivaAdmin());
+                statement.setInt(6, perfilAdmin.getIdAdmin());
+
+                int executeSuccess = statement.executeUpdate();
+
+                if (executeSuccess > 0) {
+                    System.out.println("Usuário atualizado: " + perfilAdmin.getNomeAdmin() + " " +
+                            perfilAdmin.getSobrenomeAdmin());
+                    System.out.println(executeSuccess);
+                    return perfilAdmin;
+                }
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("Usuário não encontrado");
+        }
+        return null;
+    }
+
+    public void removePerfilAdmin(int idAdmin) {
+        if (idAdmin != 0) {
+            String sql = "DELETE FROM perfiladmin WHERE idAdmin = ?;";
+
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+
+                statement.setInt(1, idAdmin);
+
+                int executeSuccess = statement.executeUpdate();
+
+                if (executeSuccess > 0) {
+                    System.out.println("Usuário removido!");
+                    System.out.println(executeSuccess);
+                }
+                statement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("Usuário não encontrado!");
+        }
+    }
+
+    public PerfilAdmin procuraPorId(int idAdmin) {
+        try {
+            String sql = "SELECT * FROM perfiladmin WHERE idAdmin = ?;";
+            PreparedStatement statement = this.connection.prepareStatement(sql);
+            statement.setInt(1, idAdmin);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                PerfilAdmin perfilAdmin = new PerfilAdmin();
+                perfilAdmin.setIdAdmin(resultSet.getInt("idAdmin"));
+                perfilAdmin.setNomeAdmin(resultSet.getString("nomeAdmin"));
+                perfilAdmin.setSobrenomeAdmin(resultSet.getString("sobrenomeAdmin"));
+                perfilAdmin.setNumCelularAdmin(resultSet.getString("numCelularAdmin"));
+                perfilAdmin.setDataCadastroAdmin(resultSet.getString("dataCadastroAdmin"));
+                perfilAdmin.setContaAtivaAdmin(resultSet.getBoolean("isContaAtivaAdmin"));
+                return perfilAdmin;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -89,42 +178,6 @@ public class PerfilAdminDAO {
             statement.close();
 
             return perfisAdmin;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void alteraPerfilAdmin(PerfilAdmin perfilAdmin) {
-        String sql = "UPDATE perfiladmin SET nomeAdmin = ?, sobrenomeAdmin = ?, numCelularAdmin = ?, " +
-        "dataCadastroAdmin = ?, isContaAtivaAdmin = ? WHERE idAdmin = ?;";
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-
-            statement.setString(1, perfilAdmin.getNomeAdmin());
-            statement.setString(2, perfilAdmin.getSobrenomeAdmin());
-            statement.setString(3, perfilAdmin.getNumCelularAdmin());
-            statement.setString(4, perfilAdmin.getDataCadastroAdmin());
-            statement.setBoolean(5, perfilAdmin.isContaAtivaAdmin());
-            statement.setInt(6, perfilAdmin.getIdAdmin());
-
-            statement.execute();
-            statement.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void removePerfilAdmin(PerfilAdmin perfilAdmin) {
-        String sql = "DELETE FROM perfiladmin WHERE idAdmin = ?;";
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-
-            statement.setInt(1, perfilAdmin.getIdAdmin());
-
-            statement.execute();
-            statement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

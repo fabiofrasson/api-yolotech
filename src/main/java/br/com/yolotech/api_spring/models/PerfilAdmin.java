@@ -1,5 +1,8 @@
-package br.com.yolotech.api_spring.entities;
+package br.com.yolotech.api_spring.models;
 
+import javax.persistence.Entity;
+
+@Entity
 public class PerfilAdmin {
     private int idAdmin;
     private String nomeAdmin;
