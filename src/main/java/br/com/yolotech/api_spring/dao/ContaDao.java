@@ -46,10 +46,9 @@ public class ContaDao {
         }
     }
 
-    public Conta editConta(Conta conta, int id) {
-
+    public void editConta(Conta conta) {
         sql = "UPDATE conta SET nome = ?, sobrenome = ?, titulo = ? " +
-                    "WHERE id = ?;";
+                "WHERE id = ?;";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -57,49 +56,17 @@ public class ContaDao {
             preparedStatement.setString(1, conta.getNome());
             preparedStatement.setString(2, conta.getSobrenome());
             preparedStatement.setString(3, conta.getTitulo());
-            preparedStatement.setInt(4, id);
+            preparedStatement.setInt(4, conta.getId());
 
-            preparedStatement.execute();
-            preparedStatement.close();
+            int resultado = preparedStatement.executeUpdate();
 
-//            Conta conta1 = new Conta();
-//            conta1 = this.findById(id);
-            return conta;
-            } catch (SQLException error) {
+            if (resultado > 0) {
+                preparedStatement.close();
+            }
+        } catch (SQLException error) {
             throw new RuntimeException(error);
         }
     }
-
-//        if (id != 0 && conta != null) {
-//            sql = "UPDATE conta SET nome = ?, sobrenome = ?, titulo = ? " +
-//                    "WHERE id = ?;";
-//
-//            try {
-////                **** Verificar a questão da data ****
-////                java.sql.Date dataCad = new java.sql.Date(
-////                        Calendar.getInstance().getTimeInMillis());
-//                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-//                preparedStatement.setString(1, conta.getNome());
-//                preparedStatement.setString(2, conta.getSobrenome());
-//                preparedStatement.setString(3, conta.getTitulo());
-//                preparedStatement.setInt(4, conta.getId());
-//
-//                int executeSuccess = preparedStatement.executeUpdate();
-//
-//                if (executeSuccess > 0) {
-//                    System.out.println("Conta atualizada: " + conta.getNome() + " " + conta.getSobrenome());
-//                    System.out.println(executeSuccess);
-//                    return conta;
-//                }
-//                preparedStatement.close();
-//            } catch (SQLException error) {
-//                throw new RuntimeException(error);
-//            }
-//        } else {
-//            System.out.println("Conta não encontrada!");
-//        }
-//        return null;
-//    }
 
     public void deleteConta(int id) {
         if (id != 0) {

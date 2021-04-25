@@ -21,7 +21,7 @@ public class ContaController {
         return Response.ok(new Gson().toJson(contas)).build();
     }
 
-//    OK - Tratar null
+//    OK
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -29,7 +29,7 @@ public class ContaController {
         return contaDao.findById(id);
     }
 
-//    OK - Mensagem confirmação
+//    OK
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -42,29 +42,19 @@ public class ContaController {
         }
     }
 
-//    500 INTERNAL SERVER ERROR
+//    OK
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editConta(Conta conta, @PathParam("id") int id) {
-
-        ContaDao contaDao = new ContaDao();
-        if (contaDao.findById(id) == null) {
-            return Response.status(404).entity("Conta não existente!").build();
-        } else {
-            Conta contaResult = contaDao.editConta(conta, id);
-            contaDao.editConta(conta, id);
-            return Response.ok(new Gson().toJson(contaResult)).build();
+        try {
+            conta.setId(id);
+            contaDao.editConta(conta);
+            return Response.status(Response.Status.OK).entity(conta).build();
+        } catch (Exception error) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.getMessage()).build();
         }
-
-//        ContaDao contaDao = new ContaDao();
-//        if (contaDao.findById(id) == null) {
-//            return Response.status(404).entity("Conta não existente!").build();
-//        } else {
-//            Conta conta1 = contaDao.editConta(conta, id);
-//            return Response.ok(new Gson().toJson(conta1)).build();
-//        }
     }
 
 //    OK
