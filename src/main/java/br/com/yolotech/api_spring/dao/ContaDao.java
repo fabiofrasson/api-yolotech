@@ -17,11 +17,10 @@ public class ContaDao {
     }
 
     public void addConta(Conta conta) {
-        sql = "INSERT INTO conta (nome, sobrenome, titulo, dataCad) " +
-                "VALUES (?, ?, ?, ?);";
+        sql = "INSERT INTO conta (nome, sobrenome, titulo, contato, username, biografia, github, linkedin, senha, " +
+                "role, dataCad, isAtiva) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try {
-//            preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             java.sql.Date dataCad = new java.sql.Date(
@@ -30,7 +29,15 @@ public class ContaDao {
             preparedStatement.setString(1, conta.getNome());
             preparedStatement.setString(2, conta.getSobrenome());
             preparedStatement.setString(3, conta.getTitulo());
-            preparedStatement.setDate(4, dataCad);
+            preparedStatement.setString(4, conta.getContato());
+            preparedStatement.setString(5, conta.getUsername());
+            preparedStatement.setString(6, conta.getBiografia());
+            preparedStatement.setString(7, conta.getGithub());
+            preparedStatement.setString(8, conta.getLinkedIn());
+            preparedStatement.setString(9, conta.getSenha());
+            preparedStatement.setInt(10, conta.getRole());
+            preparedStatement.setDate(11, dataCad);
+            preparedStatement.setBoolean(12, conta.isAtiva());
 
             preparedStatement.execute();
 
@@ -47,8 +54,8 @@ public class ContaDao {
     }
 
     public void editConta(Conta conta) {
-        sql = "UPDATE conta SET nome = ?, sobrenome = ?, titulo = ? " +
-                "WHERE id = ?;";
+        sql = "UPDATE conta SET nome=?, sobrenome=?, titulo=?, contato=?, username=?, biografia=?, github=?, " +
+                "linkedin=?, senha=?,role=?, isAtiva=? WHERE id = ?;";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -56,7 +63,15 @@ public class ContaDao {
             preparedStatement.setString(1, conta.getNome());
             preparedStatement.setString(2, conta.getSobrenome());
             preparedStatement.setString(3, conta.getTitulo());
-            preparedStatement.setInt(4, conta.getId());
+            preparedStatement.setString(4, conta.getContato());
+            preparedStatement.setString(5, conta.getUsername());
+            preparedStatement.setString(6, conta.getBiografia());
+            preparedStatement.setString(7, conta.getGithub());
+            preparedStatement.setString(8, conta.getLinkedIn());
+            preparedStatement.setString(9, conta.getSenha());
+            preparedStatement.setInt(10, conta.getRole());
+            preparedStatement.setBoolean(11, conta.isAtiva());
+            preparedStatement.setInt(12, conta.getId());
 
             int resultado = preparedStatement.executeUpdate();
 
@@ -107,7 +122,15 @@ public class ContaDao {
                 conta.setNome(resultSet.getString("nome"));
                 conta.setSobrenome(resultSet.getString("sobrenome"));
                 conta.setTitulo(resultSet.getString("titulo"));
+                conta.setContato(resultSet.getString("contato"));
+                conta.setUsername(resultSet.getString("username"));
+                conta.setBiografia(resultSet.getString("biografia"));
+                conta.setGithub(resultSet.getString("github"));
+                conta.setLinkedIn(resultSet.getString("linkedIn"));
+                conta.setSenha(resultSet.getString("senha"));
+                conta.setRole(resultSet.getInt("role"));
                 conta.setDataCad(resultSet.getDate("dataCad"));
+                conta.setAtiva(resultSet.getBoolean("isAtiva"));
                 return conta;
             } else {
                 System.out.println("Conta não encontrada!");
@@ -142,7 +165,15 @@ public class ContaDao {
                 conta.setNome(resultSet.getString("nome"));
                 conta.setSobrenome(resultSet.getString("sobrenome"));
                 conta.setTitulo(resultSet.getString("titulo"));
+                conta.setContato(resultSet.getString("contato"));
+                conta.setUsername(resultSet.getString("username"));
+                conta.setBiografia(resultSet.getString("biografia"));
+                conta.setGithub(resultSet.getString("github"));
+                conta.setLinkedIn(resultSet.getString("linkedIn"));
+                conta.setSenha(resultSet.getString("senha"));
+                conta.setRole(resultSet.getInt("role"));
                 conta.setDataCad(resultSet.getDate("dataCad"));
+                conta.setAtiva(resultSet.getBoolean("isAtiva"));
                 contas.add(conta);
             }
             resultSet.close();
