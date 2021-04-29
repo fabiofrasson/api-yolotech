@@ -5,13 +5,14 @@ import br.com.yolotech.api_spring.models.Conta;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class ContaDao {
+public class ContaDaoBkp {
     public Connection connection;
     public String sql = null;
 
-    public ContaDao() {
+    public ContaDaoBkp() {
         this.connection = new ConnectionFactory().getConnection();
     }
 
@@ -27,9 +28,9 @@ public class ContaDao {
                 "github VARCHAR(50)," +
                 "linkedIn VARCHAR(50)," +
                 "senha VARCHAR(20) NOT NULL," +
-                "role INT NOT NULL DEFAULT 1," +
-                "dataCad DATE NOT NULL DEFAULT NOW()," +
-                "isAtiva boolean DEFAULT TRUE," +
+                "role INT NOT NULL," +
+                "dataCad DATE NOT NULL," +
+                "isAtiva boolean," +
                 "PRIMARY KEY (id)" +
                 ");";
 
@@ -45,8 +46,8 @@ public class ContaDao {
     }
 
     public void addConta(Conta conta) {
-        sql = "INSERT INTO conta (nome, sobrenome, titulo, contato, username, biografia, github, linkedIn, senha) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        sql = "INSERT INTO conta (nome, sobrenome, titulo, contato, username, biografia, github, linkedIn, senha, " +
+                "role, dataCad, isAtiva) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -60,6 +61,9 @@ public class ContaDao {
             preparedStatement.setString(7, conta.getGithub());
             preparedStatement.setString(8, conta.getLinkedIn());
             preparedStatement.setString(9, conta.getSenha());
+            preparedStatement.setInt(10, conta.getRole());
+            preparedStatement.setDate(11, conta.getDataCad());
+            preparedStatement.setBoolean(12, conta.isAtiva());
 
             preparedStatement.execute();
 
@@ -77,7 +81,7 @@ public class ContaDao {
 
     public void editConta(Conta conta) {
         sql = "UPDATE conta SET nome=?, sobrenome=?, titulo=?, contato=?, username=?, biografia=?, github=?, " +
-                "linkedIn=?, senha=?, isAtiva=? WHERE id = ?;";
+                "linkedIn=?, senha=?, role=?, dataCad=?, isAtiva=? WHERE id = ?;";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -91,8 +95,10 @@ public class ContaDao {
             preparedStatement.setString(7, conta.getGithub());
             preparedStatement.setString(8, conta.getLinkedIn());
             preparedStatement.setString(9, conta.getSenha());
-            preparedStatement.setBoolean(10, conta.isAtiva());
-            preparedStatement.setInt(11, conta.getId());
+            preparedStatement.setInt(10, conta.getRole());
+            preparedStatement.setDate(11, conta.getDataCad());
+            preparedStatement.setBoolean(12, conta.isAtiva());
+            preparedStatement.setInt(13, conta.getId());
 
             int resultado = preparedStatement.executeUpdate();
 
@@ -173,7 +179,7 @@ public class ContaDao {
 
     public List<Conta> getContas() {
         try {
-            List<Conta> contas = new ArrayList<>();
+            List<Conta> contas = new ArrayList<Conta>();
             sql = "SELECT * FROM conta;";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);

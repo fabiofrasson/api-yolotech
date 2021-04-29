@@ -38,6 +38,20 @@ public class Conta {
         this.isAtiva = isAtiva;
     }
 
+    public Conta(String nome, String sobrenome, String titulo, String contato, String username, String biografia, String github, String linkedIn, String senha, int role, boolean isAtiva) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.titulo = titulo;
+        this.contato = contato;
+        this.username = username;
+        this.biografia = biografia;
+        this.github = github;
+        this.linkedIn = linkedIn;
+        this.senha = senha;
+        this.role = role;
+        this.isAtiva = isAtiva;
+    }
+
     public Conta(String nome, String sobrenome, String titulo, String contato, String username, String biografia, String github, String linkedIn, String senha, int role, Date dataCad, Date ultLogin, boolean isAtiva) {
         this.nome = nome;
         this.sobrenome = sobrenome;

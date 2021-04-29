@@ -3,6 +3,7 @@ package br.com.yolotech.api_spring.dao;
 import br.com.yolotech.api_spring.factory.ConnectionFactory;
 import br.com.yolotech.api_spring.models.AvaliacaoCurso;
 import br.com.yolotech.api_spring.models.Conta;
+import br.com.yolotech.api_spring.models.Curso;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,11 +21,13 @@ public class AvaliacaoCursoDao {
 
     public void addAvaliacaoCurso(AvaliacaoCurso avaliacaoCurso) {
         Conta conta = new Conta();
-        sql = "INSERT INTO avaliacao (curso, usuario, nota, comentario, dataCad, isEditado, isAtiva) " +
+        Curso curso = new Curso();
+        sql = "INSERT INTO avaliacao (curso, usuario, nota, comentario, dataCad, isEditada, isAtiva) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
 
             java.sql.Date dataCad = new java.sql.Date(
                     Calendar.getInstance().getTimeInMillis());
@@ -52,7 +55,7 @@ public class AvaliacaoCursoDao {
     }
 
     public void editAvaliacaoCurso(AvaliacaoCurso avaliacaoCurso) {
-        sql = "UPDATE avaliacao SET nota=?, comentario=?, isEditado=?, isAtiva=? WHERE id=?;";
+        sql = "UPDATE avaliacao SET nota=?, comentario=?, isEditada=?, isAtiva=? WHERE id=?;";
 
         try {
             PreparedStatement preparedstatement = connection.prepareStatement(sql);

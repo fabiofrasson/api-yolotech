@@ -13,23 +13,17 @@ import java.util.List;
 public class ContaController {
     private ContaDao contaDao = new ContaDao();
 
-//    OK
+    // OK
     @GET
+    @Path("criatabelaconta")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getContas() {
-        List<Conta> contas = contaDao.getContas();
-        return Response.ok(new Gson().toJson(contas)).build();
+    public Response criaTabelaConta() {
+        ContaDao contaDao = new ContaDao();
+        contaDao.criaTabelaConta();
+        return Response.ok(new Gson().toJson("Tabela Conta criada com sucesso!")).build();
     }
 
-//    OK
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Conta findById(@PathParam("id") int id) {
-        return contaDao.findById(id);
-    }
-
-//    OK
+    // OK
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -42,7 +36,7 @@ public class ContaController {
         }
     }
 
-//    OK
+    // OK
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -57,12 +51,28 @@ public class ContaController {
         }
     }
 
-//    OK
+    // OK
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteConta(@PathParam("id") int id) {
         contaDao.deleteConta(id);
         return Response.status(202).entity("Usuário removido: " + id).build();
+    }
+
+    // OK
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Conta findById(@PathParam("id") int id) {
+        return contaDao.findById(id);
+    }
+
+    // OK
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getContas() {
+        List<Conta> contas = contaDao.getContas();
+        return Response.ok(new Gson().toJson(contas)).build();
     }
 }
