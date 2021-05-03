@@ -5,10 +5,7 @@ import br.com.yolotech.api_spring.models.AvaliacaoCurso;
 import br.com.yolotech.api_spring.models.Conta;
 import br.com.yolotech.api_spring.models.Curso;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -19,26 +16,43 @@ public class AvaliacaoCursoDao {
 
     public AvaliacaoCursoDao() { this.connection = new ConnectionFactory().getConnection(); }
 
-    public void addAvaliacaoCurso(AvaliacaoCurso avaliacaoCurso) {
-        Conta conta = new Conta();
-        Curso curso = new Curso();
-        sql = "INSERT INTO avaliacao (curso, usuario, nota, comentario, dataCad, isEditada, isAtiva) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?);";
+    public void criaTabelaAvaliacao() {
+        sql = "CREATE TABLE IF NOT EXISTS avaliacao(" +
+                "id INT NOT NULL AUTO_INCREMENT," +
+                "curso INT," +
+                "usuario INT," +
+                "nota DOUBLE (4,2)," +
+                "comentario VARCHAR (255)," +
+                "dataCad DATE NOT NULL DEFAULT NOW()," +
+                "isEditada boolean DEFAULT FALSE," +
+                "isAtiva boolean DEFAULT true," +
+                "PRIMARY KEY (id)," +
+                "FOREIGN KEY (curso) REFERENCES curso(id)," +
+                "FOREIGN KEY (usuario) REFERENCES conta(id)" +
+                ");";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
+            preparedStatement.execute();
+            preparedStatement.close();
+            System.out.println("Tabela Avaliação criada com sucesso!");;
+        } catch (SQLException error) {
+            error.printStackTrace();
+        }
+    }
 
-            java.sql.Date dataCad = new java.sql.Date(
-                    Calendar.getInstance().getTimeInMillis());
+    public void addAvaliacaoCurso(AvaliacaoCurso avaliacaoCurso) {
+        sql = "INSERT INTO avaliacao (curso, usuario, nota, comentario) " +
+                "VALUES (?, ?, ?, ?);";
 
-            preparedStatement.setInt(1, curso.getId());
-            preparedStatement.setInt(2, conta.getId());
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setInt(1, avaliacaoCurso.getCurso().getId());
+            preparedStatement.setInt(2, avaliacaoCurso.getUsuario().getId());
             preparedStatement.setDouble(3, avaliacaoCurso.getNota());
             preparedStatement.setString(4, avaliacaoCurso.getComentario());
-            preparedStatement.setDate(5, dataCad);
-            preparedStatement.setBoolean(6, avaliacaoCurso.isEditada());
-            preparedStatement.setBoolean(7, avaliacaoCurso.isAtiva());
 
             preparedStatement.execute();
 
@@ -112,8 +126,12 @@ public class AvaliacaoCursoDao {
             if (resultSet.next()) {
                 AvaliacaoCurso avaliacaoCurso = new AvaliacaoCurso();
                 avaliacaoCurso.setId(resultSet.getInt("id"));
-                avaliacaoCurso.setCurso(resultSet.getInt("curso"));
-                avaliacaoCurso.setUsuario(resultSet.getInt("usuario"));
+                CursoDao cursoDao = new CursoDao();
+                Curso curso = cursoDao.findById(resultSet.getInt("id"));
+                avaliacaoCurso.setCurso(curso);
+                ContaDao contaDao = new ContaDao();
+                Conta conta = contaDao.findById(resultSet.getInt("id"));
+                avaliacaoCurso.setUsuario(conta);
                 avaliacaoCurso.setNota(resultSet.getDouble("nota"));
                 avaliacaoCurso.setComentario(resultSet.getString("comentario"));
                 avaliacaoCurso.setDataCad(resultSet.getDate("dataCad"));
@@ -149,8 +167,12 @@ public class AvaliacaoCursoDao {
             while (resultSet.next()) {
                 AvaliacaoCurso avaliacaoCurso = new AvaliacaoCurso();
                 avaliacaoCurso.setId(resultSet.getInt("id"));
-                avaliacaoCurso.setCurso(resultSet.getInt("curso"));
-                avaliacaoCurso.setUsuario(resultSet.getInt("usuario"));
+                CursoDao cursoDao = new CursoDao();
+                Curso curso = cursoDao.findById(resultSet.getInt("id"));
+                avaliacaoCurso.setCurso(curso);
+                ContaDao contaDao = new ContaDao();
+                Conta conta = contaDao.findById(resultSet.getInt("id"));
+                avaliacaoCurso.setUsuario(conta);
                 avaliacaoCurso.setNota(resultSet.getDouble("nota"));
                 avaliacaoCurso.setComentario(resultSet.getString("comentario"));
                 avaliacaoCurso.setDataCad(resultSet.getDate("dataCad"));

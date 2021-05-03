@@ -13,20 +13,17 @@ import java.util.List;
 public class AvaliacaoCursoController {
     private AvaliacaoCursoDao avaliacaoCursoDao = new AvaliacaoCursoDao();
 
+    // OK
     @GET
+    @Path("criatabelaavaliacao")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAvaliacoesCursos() {
-        List<AvaliacaoCurso> avaliacoesCursos = avaliacaoCursoDao.getAvaliacoesCursos();
-        return Response.ok(new Gson().toJson(avaliacoesCursos)).build();
+    public Response criaTabelaAvaliacao() {
+        AvaliacaoCursoDao avaliacaoCursoDao = new AvaliacaoCursoDao();
+        avaliacaoCursoDao.criaTabelaAvaliacao();
+        return Response.ok(new Gson().toJson("Tabela Avaliação criada com sucesso!")).build();
     }
 
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public AvaliacaoCurso findById(@PathParam("id") int id) { return avaliacaoCursoDao.findById(id); }
-
     @POST
-    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAvaliacaoCurso(AvaliacaoCurso avaliacaoCurso) {
@@ -57,6 +54,18 @@ public class AvaliacaoCursoController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAvaliacaoCurso(@PathParam("id") int id) {
         avaliacaoCursoDao.deleteAvaliacaoCurso(id);
-        return Response.status(202).entity("Usuário removido: " + id).build();
+        return Response.status(202).entity("Avaliação removida: " + id).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AvaliacaoCurso findById(@PathParam("id") int id) { return avaliacaoCursoDao.findById(id); }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAvaliacoesCursos() {
+        List<AvaliacaoCurso> avaliacoesCursos = avaliacaoCursoDao.getAvaliacoesCursos();
+        return Response.ok(new Gson().toJson(avaliacoesCursos)).build();
     }
 }

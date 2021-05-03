@@ -57,7 +57,7 @@ public class ContaController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteConta(@PathParam("id") int id) {
         contaDao.deleteConta(id);
-        return Response.status(202).entity("Usuário removido: " + id).build();
+        return Response.status(202).entity("Conta removida: " + id).build();
     }
 
     // OK

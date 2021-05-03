@@ -6,8 +6,8 @@ import java.sql.Date;
 @Entity
 public class AvaliacaoCurso {
     private int id;
-    private int curso;
-    private int usuario;
+    private Curso curso;
+    private Conta usuario;
     private double nota;
     private String comentario;
     private Date dataCad;
@@ -17,7 +17,23 @@ public class AvaliacaoCurso {
     public AvaliacaoCurso() {
     }
 
-    public AvaliacaoCurso(int curso, int usuario, double nota, String comentario, Date dataCad, boolean isEditada, boolean isAtiva) {
+    public AvaliacaoCurso(Curso curso, Conta usuario, double nota, String comentario) {
+        this.curso = curso;
+        this.usuario = usuario;
+        this.nota = nota;
+        this.comentario = comentario;
+    }
+
+    public AvaliacaoCurso(Curso curso, Conta usuario, double nota, String comentario, Date dataCad, boolean isAtiva) {
+        this.curso = curso;
+        this.usuario = usuario;
+        this.nota = nota;
+        this.comentario = comentario;
+        this.dataCad = dataCad;
+        this.isAtiva = isAtiva;
+    }
+
+    public AvaliacaoCurso(Curso curso, Conta usuario, double nota, String comentario, Date dataCad, boolean isEditada, boolean isAtiva) {
         this.curso = curso;
         this.usuario = usuario;
         this.nota = nota;
@@ -35,19 +51,19 @@ public class AvaliacaoCurso {
         this.id = id;
     }
 
-    public int getCurso() {
+    public Curso getCurso() {
         return curso;
     }
 
-    public void setCurso(int curso) {
+    public void setCurso(Curso curso) {
         this.curso = curso;
     }
 
-    public int getUsuario() {
+    public Conta getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(int usuario) {
+    public void setUsuario(Conta usuario) {
         this.usuario = usuario;
     }
 
